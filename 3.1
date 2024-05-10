@@ -1,26 +1,125 @@
-<html>
-<head>
-<title>A Simple Form with JavaScript Validation</title>
-<script type="text/javascript">
-<!--
-function validate_form ( ) {
-    valid = true;
-    if ( document.contact_form.contact_name.value == "" ) {
-        alert ( "Please fill in the 'Your Name' box." );
-        valid = false;
-    }
-    return valid;
-}
-//-->
-</script>
-</head>
-<body bgcolor="#FFFFFF">
-<form name="contact_form" method="post" action="/cgi-bin/articles/development/javascript/form-validation-with-javascript/ contact_simple.cgi" onSubmit="return validate_form ( );">
-Please Enter Your Name
-<p>Your Name: <input type="text" name="contact_name"></p>
-<p>Your Age: <input type="text" Age="contact_name"></p>
-<p>Your mobile: <input type="text" mobile="contact_name"></p>
-<p><input type="submit" name="send" value="Send Details"></p>
-</form>
-</body>
-</html>
+EX.3#WORD COUNT mapper.py
+
+import sys
+for line in sys.stdin:
+    line = line.strip()
+    words = line.split()
+    for word in words:
+        print(f"{word}\t1")
+
+
+#reducer.py
+
+from operator import itemgetter
+import sys
+current_word = None
+current_count = 0
+word = None
+for line in sys.stdin:
+    line = line.strip()
+    word, count = line.split('\t', 1)
+    try:
+        count = int(count)
+    except ValueError:
+        continue
+    if current_word == word:
+        current_count += count
+    else:
+        if current_word:
+            print(f"{current_word}\t{current_count}")
+        current_word = word
+        current_count = count
+if current_word == word:
+    print(f"{current_word}\t{current_count}")
+
+ EX.4 
+ #Weather data MAPPER.PY:-
+import sys
+for line in sys.stdin:
+    line = line.strip()
+    words = line.split()
+    month = line[10:12]
+    daily_max = line[38:45]
+    daily_max = daily_max.strip()
+    for word in words:
+        print '%s\t%s' % (month ,daily_max)
+
+#REDUCER.PY:-
+from operator import itemgetter
+import sys
+current_month = None
+current_max = 0
+month = None
+for line in sys.stdin:
+    line = line.strip()
+    month, daily_max = line.split('\t', 1)
+    try:
+        daily_max = float(daily_max)
+    except ValueError:
+        continue
+    if current_month == month:
+        if daily_max > current_max:
+            current_max = daily_max
+    else:
+        if current_month:
+            print '%s\t%s' % (current_month, current_max)
+        current_max = daily_max
+        current_month = month
+if current_month == month:
+    print '%s\t%s' % (current_month, current_max)
+    
+    Exp 5
+
+#matrix multiplication - mapper.py
+import sys
+for line in sys.stdin:
+    line=line.strip()
+    entry=line.split(",")
+    key=entry[0]
+    value=line[1:]
+    if key=='A':
+        print('{0}\t{1}'.format(key,value))
+    elif key=='B':
+        print('{0}\t{1}'.format(key,value))
+        
+#matric multiplication - reducer.py
+import sys
+a={}
+b={}
+for input_line in sys.stdin:
+    input_line=input_line.split('\t',1)
+    v=value.split(",")
+    if this.key=='A':
+        a[(int(v[1]),int(v[2]))]=int(v[3])
+    elif this.key=='B':
+        b[(int(v[1]),int(v[2]))]=int(v[3])
+for i in range(0,2):
+    for j in range(0,2):
+        result=0
+        for k in range(2):
+            result+=a.get((i,k),0)*b.get((k,j),0)
+        print("({0},{1}\t{2}".format(i,j,result))
+        
+        EX 8A
+        hadoop1@hadoop1-VirtualBox:~$pig grunt> 
+
+input = LOAD '/word_count/input.txt' AS(line:Chararray); 
+
+grunt > words = FOREACH input GENERATE FLATTEN(TOKENIZE(line,' ')) AS word; 
+
+grunt > grouped = GROUP words BY word; 
+
+grunt > wordcount = FOREACH Grouped GENERATE group, COUNT(words);; 
+
+grunt > DUMP wordcount;
+
+EX 8B 
+PIGLATIN MAX TEMP hadoop1@hadoop1-VirtualBox:~$pig 
+
+grunt> A = LOAD “input.txt” USING PigStorage() AS (Year:int,Temp:int); 
+
+ grunt >B = GROUP A ALL; 
+
+grunt >C = FOREACH B GENERATE MAX(A.Temp); 
+
+grunt >DUMP C
